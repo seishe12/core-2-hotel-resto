@@ -1,0 +1,57 @@
+:root{
+    --btn: #11cc11;
+    --btn_hover: #62a72e;
+}
+
+
+/* BASE */
+*{
+    font-family: 'Poppins', sans-serif;
+}
+.h-font{
+    font-family: 'Merienda', cursive;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.custom-bg{
+    background-color: var(--btn);
+    border: 1px solid var(--btn);
+}
+.custom-bg:hover{
+    background-color: var(--btn_hover);
+    border-color: var(--btn_hover);
+}
+
+.custom-alert{
+    position: fixed;
+    top: 80px;
+    right: 25px;
+}
+
+#dashboard-menu{
+    position: fixed;
+    height: 100%;
+    z-index: 11;
+}
+
+/*width*/
+::-webkit-scrollbar{
+    width: 10px;
+}
+/*Track*/
+::-webkit-scrollbar-track{
+    background: #f1f1f1;
+}
+/*Handle*/
+::-webkit-scrollbar-thumb{
+    background: #242424;
+}
+/*Handle on Hover*/
+::-webkit-scrollbar-thumb:hover{
+    background: #555;
+}

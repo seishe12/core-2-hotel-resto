@@ -1,0 +1,40 @@
+.color-gray {
+  color: #444444;
+}
+
+.color-purp {
+  color: #5e459a;
+}
+
+.color-magg {
+  color: #ca41b2;
+}
+
+.color-blue {
+  color: #30a5ff;
+}
+
+.color-green {
+  color: #14b700;
+}
+
+.color-teal {
+  color: #1ebfae;
+}
+
+.color-orange {
+  color: #ffb53e;
+}
+
+.color-red {
+  color: #f9243f;
+}
+
+.no-padding {
+  padding: 0;
+  margin: 0;
+}
+
+.fa-xl {
+  font-size: 5em;
+}
