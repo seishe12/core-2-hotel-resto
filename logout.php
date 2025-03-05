@@ -1,6 +1,9 @@
-<?php
-session_start();
-unset($_SESSION['admin_id']);
-session_destroy();
-header("Location: ../../index.php");
-exit;
+<?php 
+
+    require('inc/essentials.php');
+
+    session_start();
+    session_destroy();
+    redirect('index.php');
+    
+?>

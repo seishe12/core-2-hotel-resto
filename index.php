@@ -1,90 +1,153 @@
 <?php
-session_start();
-include('config/config.php');
-//login 
-if (isset($_POST['login'])) {
-  $admin_email = $_POST['admin_email'];
-  $admin_password = sha1(md5($_POST['admin_password'])); //double encrypt to increase security
-  $stmt = $mysqli->prepare("SELECT admin_email, admin_password, admin_id  FROM   rpos_admin WHERE (admin_email =? AND admin_password =?)"); //sql to log in user
-  $stmt->bind_param('ss',  $admin_email, $admin_password); //bind fetched parameters
-  $stmt->execute(); //execute bind 
-  $stmt->bind_result($admin_email, $admin_password, $admin_id); //bind result
-  $rs = $stmt->fetch();
-  $_SESSION['admin_id'] = $admin_id;
-  if ($rs) {
-    //if its sucessfull
-    header("location:orders.php");
-  } else {
-    $err = "Incorrect Authentication Credentials ";
-  }
-}
-require_once('partials/_head.php');
+    require("inc/essentials.php");
+    require("inc/db_config.php");
+
+    
+    session_start();
+    if((isset( $_SESSION['adminLogin'] ) && $_SESSION['adminLogin'] == true)){
+        // redirect('dashboard.php');
+    }
 ?>
 
-<body  class="bg-dark">
-  <div class="main-content">
-    <div class="header bg-gradient-primar py-7">
-      <div class="container">
-        <div class="header-body text-center mb-7">
-          <div class="row justify-content-center">
-            <div class="col-lg-5 col-md-6">
-              <h1 class="text-white">Order Management</h1>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div><!-- For more projects: Visit codeastro.com  -->
-    <!-- Page content -->
-    <div class="container mt--8 pb-5">
-      <div class="row justify-content-center">
-        <div class="col-lg-5 col-md-7">
-          <div class="card bg-secondary shadow border-0">
-            <div class="card-body px-lg-5 py-lg-5">
-              <form method="post" role="form">
-                <div class="form-group mb-3">
-                  <div class="input-group input-group-alternative">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="ni ni-email-83"></i></span>
-                    </div>
-                    <input class="form-control" required name="admin_email" placeholder="Email" type="email">
-                  </div>
-                </div><!-- For more projects: Visit codeastro.com  -->
-                <div class="form-group">
-                  <div class="input-group input-group-alternative">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
-                    </div>
-                    <input class="form-control" required name="admin_password" placeholder="Password" type="password">
-                  </div>
-                </div>
-                <div class="custom-control custom-control-alternative custom-checkbox">
-                  <input class="custom-control-input" id=" customCheckLogin" type="checkbox">
-                  <label class="custom-control-label" for=" customCheckLogin">
-                    <span class="text-muted">Remember Me</span>
-                  </label>
-                </div><!-- For more projects: Visit codeastro.com  -->
-                <div class="text-center">
-                  <button type="submit" name="login" class="btn btn-primary my-4">Log In</button>
-                </div>
-              </form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login Panel</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="image/ph-logo.webp">
+    <link rel="icon" type="image/webp" sizes="32x32" href="image/ph-logo.webp">
+    <link rel="icon" type="image/webp" sizes="16x16" href="image/ph-logo.webp">
 
-            </div>
-          </div>
-          <div class="row mt-3">
-            <div class="col-6">
-              <!-- <a href="forgot_pwd.php" class="text-light"><small>Forgot password?</small></a> -->
-            </div>
-          </div>
+<!--LINK.PHP  -->
+    <?php require('inc/links.php'); ?>
+
+    <style>
+        body,
+        html {
+            height: 100%;
+            background-position: center; 
+            background-repeat: no-repeat; 
+            background-size: cover;
+            background-image: url(image/test.jpg);
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            width: 348px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .logo {
+            display: block;
+            margin: 0 auto 23px;
+            width: 150px;
+        }
+
+        .form-control {
+            border-radius: 25px;
+            border: 1px solid #28a745;
+        }
+
+        .form-control:focus {
+            border-color: #28a745;
+            box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+        }
+
+        .btn-green {
+            background-color: #28a745;
+            border-color: #28a745;
+            border-radius: 25px;
+
+        }
+
+        .btn-green:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+
+        @media (max-width: 576px) {
+            .form-container {
+                padding: 15px;
+            }
+
+            .logo {
+                width: 150px;
+            }
+        }
+
+        .input-group .form-control {
+            border-radius: 20px;
+        }
+        .input-group .input-group-text {
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+    
+<!-- LOGIN -->
+    <div class="login-container">
+        <div class="form-container">
+            <img src="image/ph-logo.webp" alt="Paradise Logo" class="logo">
+            <h3 class="text-center text-light mb-4">Welcome Admin</h3>
+            <form method="POST">
+                <div class="mb-3">
+                    <h6 class="text-light">Admin Username</h6>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="username" name="admin_name" required>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h6 class="text-light">Admin Password</h6>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="password" name="admin_pass" required>
+                    </div>
+                </div>
+                <button type="submit" name="login" class="btn btn-green text-light w-100">LOGIN</button>
+            </form>
         </div>
-      </div>
     </div>
-  </div>
-  <!-- Footer -->
-  
-  <!-- Argon Scripts -->
-  <?php
-  require_once('partials/_scripts.php');
-  ?>
+
+
+    <?php
+
+        if(isset($_POST['login']))
+        {
+            $frm_data = filteration($_POST);
+
+            $query = "SELECT * FROM `admin` WHERE `admin_name`=? AND `admin_pass`=?";
+            $values = [$frm_data['admin_name'],$frm_data['admin_pass']];
+
+            $res = select($query,$values,"ss");
+            if($res->num_rows==1){
+                $row = mysqli_fetch_assoc($res);
+                $_SESSION['adminLogin'] = true;
+                $_SESSION['adminId'] = $row['sr_no'];
+                redirect('dashboard.php');
+            }
+            else{
+                alert('error', 'Login failed - Invalid Credentials!');
+            }
+        }
+        
+    ?>
+
+<!--SCRIPT.PHP  -->
+    <?php require('inc/scripts.php'); ?>
+
 </body>
-<!-- For more projects: Visit codeastro.com  -->
 </html>
